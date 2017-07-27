@@ -1030,7 +1030,7 @@ namespace ts {
 
         function emitTypeQuery(node: TypeQueryNode) {
             write("typeof ");
-            emit(node.exprName);
+            emit(node.operand);
         }
 
         function emitTypeLiteral(node: TypeLiteralNode) {

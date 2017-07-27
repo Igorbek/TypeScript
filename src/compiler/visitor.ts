@@ -363,7 +363,7 @@ namespace ts {
 
             case SyntaxKind.TypeQuery:
                 return updateTypeQueryNode((<TypeQueryNode>node),
-                    visitNode((<TypeQueryNode>node).exprName, visitor, isEntityName));
+                    visitNode((<TypeQueryNode>node).operand, visitor, isEntityName));
 
             case SyntaxKind.TypeLiteral:
                 return updateTypeLiteralNode((<TypeLiteralNode>node),

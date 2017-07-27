@@ -2594,7 +2594,8 @@ namespace ts {
 
                 function createTypeQueryNodeFromSymbol(symbol: Symbol, symbolFlags: SymbolFlags) {
                     const entityName = symbolToName(symbol, context, symbolFlags, /*expectsIdentifier*/ false);
-                    return createTypeQueryNode(entityName);
+                    const operand = createExpressionFromEntityName(entityName);
+                    return createTypeQueryNode(<UnaryExpression>operand);
                 }
 
                 function symbolToTypeReferenceName(symbol: Symbol) {
@@ -6956,7 +6957,7 @@ namespace ts {
                 // The expression is processed as an identifier expression (section 4.3)
                 // or property access expression(section 4.10),
                 // the widened type(section 3.9) of which becomes the result.
-                links.resolvedType = getWidenedType(checkExpression(node.exprName));
+                links.resolvedType = getWidenedType(checkExpression(node.operand));
             }
             return links.resolvedType;
         }
@@ -10670,7 +10671,7 @@ namespace ts {
             // The expression is restricted to a single identifier or a sequence of identifiers separated by periods
             return !!findAncestor(
                 node,
-                n => n.kind === SyntaxKind.TypeQuery ? true : n.kind === SyntaxKind.Identifier || n.kind === SyntaxKind.QualifiedName ? false : "quit");
+                n => n.kind === SyntaxKind.TypeQuery);
         }
 
         // Return the flow cache key for a "dotted name" (i.e. a sequence of identifiers
@@ -24809,6 +24810,10 @@ namespace ts {
             if (isInAmbientContext(node)) {
                 // An accessors is already reported about the ambient context
                 if (isAccessor(node.parent)) {
+                    return getNodeLinks(node).hasReportedStatementInAmbientContext = true;
+                }
+
+                if (isInTypeQuery(node)) {
                     return getNodeLinks(node).hasReportedStatementInAmbientContext = true;
                 }
 
