@@ -2151,7 +2151,7 @@ namespace ts {
             const node = <TypeQueryNode>createNode(SyntaxKind.TypeQuery);
             parseExpected(SyntaxKind.TypeOfKeyword);
             if (token() === SyntaxKind.OpenParenToken) {
-                node.operand = parseSimpleUnaryExpression();
+                node.operand = parseExpression();
             }
             else {
                 node.operand = <UnaryExpression>parseEntityName(/*allowReservedWords*/ true);
